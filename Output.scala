@@ -1,4 +1,7 @@
 package MMAS
+
+import scala.collection.mutable.ArrayBuffer
+
 /**
  * Created by root on 2016/3/7.
  * 结果类
@@ -22,8 +25,8 @@ class Output(val ant:Ant) extends Serializable{
 }
 
 object Output{
-  var results:Vector[Output] = _
-  def apply(): Unit = {
-    results = Ant.bestAnts.map(x=> new Output(x))
+
+  def apply(bestAnts:ArrayBuffer[Ant]): Vector[Output] = {
+    bestAnts.map(x=> new Output(x)).toVector
   }
 }

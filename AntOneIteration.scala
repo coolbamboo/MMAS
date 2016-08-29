@@ -11,14 +11,14 @@ import scala.collection.mutable.ArrayBuffer
  * Created by root on 2016/3/6.
  *
  */
-class AntOneIteration(val bestAnts: ArrayBuffer[Ant], J_max:Int,
+class AntOneIteration(val bestAnts: ArrayBuffer[T_Ant], J_max:Int,
                       dsak_j_RDD:RDD[DSAK_Jup], avs_RDD:RDD[AVS],
                       sang_RDD:RDD[SANG], val i_iter: Long) extends Serializable {
 
-  val local_antGroup = scala.collection.mutable.ArrayBuffer[Ant]() //every iter' ants
+  val local_antGroup = scala.collection.mutable.ArrayBuffer[T_Ant]() //every iter' ants
 
-  def geneAllAntsOneIter(sc: SparkContext) :RDD[Ant] = {
-    val bestant: Ant = Util.getBestAnt(bestAnts)
+  def geneAllAntsOneIter(sc: SparkContext) :RDD[T_Ant] = {
+    val bestant: T_Ant = Util.getBestAnt(bestAnts)
     //empty local ant group
     local_antGroup.clear()
     //gene ants
@@ -27,8 +27,8 @@ class AntOneIteration(val bestAnts: ArrayBuffer[Ant], J_max:Int,
         new Ant(bestant.pher, U, J_max, dsak_j_RDD, avs_RDD, sang_RDD)
       )
     }
-    val ants: RDD[Ant] = sc.parallelize(local_antGroup)
-    val ants_deal: RDD[Ant] = ants.map(myant => {
+    val ants: RDD[T_Ant] = sc.parallelize(local_antGroup)
+    val ants_deal: RDD[T_Ant] = ants.map(myant => {
       myant.dealflow() //compute object fun
       myant
     }
@@ -41,7 +41,7 @@ class AntOneIteration(val bestAnts: ArrayBuffer[Ant], J_max:Int,
   }
 
   def geneAllAntsOneIter() = {
-    val bestant: Ant = Util.getBestAnt(bestAnts)
+    val bestant: T_Ant = Util.getBestAnt(bestAnts)
     //empty local ant group
     local_antGroup.clear()
     //gene ants
@@ -128,7 +128,7 @@ class AntOneIteration(val bestAnts: ArrayBuffer[Ant], J_max:Int,
   }
 
   //update pher using the best ant with RDD
-  def global_updatePher(ants : RDD[Ant]): Unit = {
+  def global_updatePher(ants : RDD[T_Ant]): Unit = {
     //action!
     val antsFogj = ants.map(ant => ant.Fobj)
     val faverage = antsFogj.reduce(_+_) / antsFogj.count()
@@ -162,7 +162,7 @@ class AntOneIteration(val bestAnts: ArrayBuffer[Ant], J_max:Int,
   }
 
   //no need local_antGroup
-  def local_updatePher(ants : RDD[Ant]) = {
+  def local_updatePher(ants : RDD[T_Ant]) = {
     //local best ant
     val best_local_ant = local_antGroup(0)
     val antsFobj = ants.map(ant => ant.Fobj)
@@ -192,7 +192,7 @@ class AntOneIteration(val bestAnts: ArrayBuffer[Ant], J_max:Int,
 
 object AntOneIteration {
 
-  def apply(bestants : ArrayBuffer[Ant], J_max:Int,
+  def apply(bestants : ArrayBuffer[T_Ant], J_max:Int,
             dsak_j_RDD:RDD[DSAK_Jup], avs_RDD:RDD[AVS],
             sang_RDD:RDD[SANG], sc : SparkContext, mode : String = ""){
     for (i <- 1 to iter){

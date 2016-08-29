@@ -6,7 +6,7 @@ import scala.collection.mutable.ArrayBuffer
  * Created by root on 2016/3/7.
  * 结果类
  */
-class Output(val ant:Ant) extends Serializable{
+class Output(val ant:T_Ant) extends Serializable{
 
   override def toString(): String ={
     val sb = new StringBuilder("\n")
@@ -26,7 +26,7 @@ class Output(val ant:Ant) extends Serializable{
 
 object Output{
 
-  def apply(bestAnts:ArrayBuffer[Ant]): Vector[Output] = {
+  def apply(bestAnts:ArrayBuffer[T_Ant]): Vector[Output] = {
     bestAnts.map(x=> new Output(x)).toVector
   }
 }

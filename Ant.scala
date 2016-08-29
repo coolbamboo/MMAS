@@ -15,30 +15,30 @@ import scala.util.Random
  *
  */
 class Ant(g_Pher:Array[Array[Double]], U:Int, Jmax:Int, vdsak_j:RDD[DSAK_Jup], rawAVS:RDD[AVS], rawSANG:RDD[SANG])
-extends Serializable {
+extends Serializable with T_Ant {
 
   val avss = rawAVS.collect()
   val sangs = rawSANG.collect()
   val dsaks = vdsak_j.collect()
 
-  var pathlength = 0//variable in stage length
+  override var pathlength = 0//variable in stage length
   val local_step = 1//optimal step
 
   val prob:Array[Array[Double]] = Array.ofDim(U, Jmax + 1)
   //init（catch global pher）
-  val pher:Array[Array[Double]] = g_Pher.clone()
+  override val pher:Array[Array[Double]] = g_Pher.clone()
   //decision variable
-  val Xdsa :Array[Int] = new Array(U)
+  override val Xdsa :Array[Int] = new Array(U)
   //object fun
-  var Fobj = 0.0
+  override var Fobj: Double = 0.0
   //D(defend weapon amount)
-  var b_s: Array[Double] = new Array(D)
+  override var b_s: Array[Double] = new Array(D)
   //Ground
-  var g_s:Array[Double] = new Array(S)
+  override var g_s:Array[Double] = new Array(S)
   //C
-  var c_s:Array[Double] = new Array(D)
+  override var c_s:Array[Double] = new Array(D)
   //Manpower
-  var m_s:Array[Double] = new Array(D)
+  override var m_s:Array[Double] = new Array(D)
 
 
 
@@ -211,7 +211,7 @@ extends Serializable {
     }
   }
 
-  def dealflow(): Unit ={
+  override def dealflow(): Unit ={
     //
     search()
     /*

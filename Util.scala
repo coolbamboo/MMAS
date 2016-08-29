@@ -21,19 +21,19 @@ object Util {
     temp
   }
 
-  def getBestAnt(bestants : ArrayBuffer[Ant]) : Ant = {
-    bestants.max(new Ordering[Ant] {
-      def compare(a: Ant, b: Ant) = a.Fobj compare b.Fobj
+  def getBestAnt(bestants : ArrayBuffer[T_Ant]) : T_Ant = {
+    bestants.max(new Ordering[T_Ant] {
+      def compare(a: T_Ant, b: T_Ant) = a.Fobj compare b.Fobj
     })
   }
 
-  def getBestAnt(bestants : RDD[Ant]) : Ant = {
-    bestants.collect().max(new Ordering[Ant] {
-      def compare(a: Ant, b: Ant) = a.Fobj compare b.Fobj
+  def getBestAnt(bestants : RDD[T_Ant]) : T_Ant = {
+    bestants.collect().max(new Ordering[T_Ant] {
+      def compare(a: T_Ant, b: T_Ant) = a.Fobj compare b.Fobj
     })
   }
 
-  def addInBestants(bestAnts:ArrayBuffer[Ant], myant:Ant) :Unit = {
+  def addInBestants(bestAnts:ArrayBuffer[T_Ant], myant:T_Ant) :Unit = {
     if (bestAnts.length < up) {
       bestAnts.append(myant)
     }

@@ -45,19 +45,22 @@ object ReadData{
   }
 
   def dealAVS(sc : SparkContext) = {
-    val rawAVS = sc.textFile("hdfs://192.168.120.133:9000/WTA/data/input/svg.csv")
+    //1, svg
+    val rawAVS = sc.textFile("hdfs://192.168.120.133:9000/WTA/data/input/1.csv")
     val pasedAVS = rawAVS.map(line => parseAVS(line))
     pasedAVS
   }
 
   def dealDSAK(sc:SparkContext) = {
-    val rawDSAK = sc.textFile("hdfs://192.168.120.133:9000/WTA/data/input/dsak.csv")
+    //2, dsak
+    val rawDSAK = sc.textFile("hdfs://192.168.120.133:9000/WTA/data/input/2.csv")
     val pasedDSAK = rawDSAK.map(line => parseDSAK(line))
     pasedDSAK
   }
 
   def dealSANG(sc: SparkContext) = {
-    val rawSANG = sc.textFile("hdfs://192.168.120.133:9000/WTA/data/input/sang.csv")
+    //3, sang
+    val rawSANG = sc.textFile("hdfs://192.168.120.133:9000/WTA/data/input/3.csv")
     val pasedSANG = rawSANG.map(line => parseSANG(line))
     pasedSANG
   }

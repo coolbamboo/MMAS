@@ -17,7 +17,7 @@ class AntOneIteration(val bestAnts: ArrayBuffer[T_Ant], J_max:Int,
 
   val local_antGroup = scala.collection.mutable.ArrayBuffer[T_Ant]() //every iter' ants
 
-  def geneAllAntsOneIter(sc: SparkContext) :RDD[T_Ant] = {
+  def geneAllAntsOneIter(sc: SparkContext, par: Int) :RDD[T_Ant] = {
     val bestant: T_Ant = Util.getBestAnt(bestAnts)
     //empty local ant group
     local_antGroup.clear()
@@ -27,7 +27,7 @@ class AntOneIteration(val bestAnts: ArrayBuffer[T_Ant], J_max:Int,
         new Ant(bestant.pher, U, J_max, dsak_j_RDD, avs_RDD, sang_RDD)
       )
     }
-    val ants: RDD[T_Ant] = sc.parallelize(local_antGroup)
+    val ants: RDD[T_Ant] = sc.parallelize(local_antGroup, par)
     val ants_deal: RDD[T_Ant] = ants.map(myant => {
       myant.dealflow() //compute object fun
       myant
@@ -194,13 +194,13 @@ object AntOneIteration {
 
   def apply(bestants : ArrayBuffer[T_Ant], J_max:Int,
             dsak_j_RDD:RDD[DSAK_Jup], avs_RDD:RDD[AVS],
-            sang_RDD:RDD[SANG], sc : SparkContext, mode : String = ""){
+            sang_RDD:RDD[SANG], sc : SparkContext, par: Int, mode : String = ""){
     for (i <- 1 to iter){
       val antoneiter = new AntOneIteration(bestants ,J_max, dsak_j_RDD, avs_RDD, sang_RDD, i)
       val starttime = new Date().getTime
       mode match {
         case "RDD" => {
-          val ants = antoneiter.geneAllAntsOneIter(sc)
+          val ants = antoneiter.geneAllAntsOneIter(sc,par)
           //update pher
           if (antoneiter.i_iter % l_g_ratio == 0) {
             antoneiter.global_updatePher(ants)

@@ -10,7 +10,8 @@ import org.apache.spark.{SparkConf, SparkContext}
 object main {
   def main(args: Array[String]) {
     //System.setProperty("spark.driver.host","192.168.1.52")
-    val conf = new SparkConf().setAppName("WTA").setMaster("local[6]")
+    val par = 5 //partition
+    val conf = new SparkConf().setAppName("WTA").setMaster(s"local[$par]")
     //.setJars(List("D:\\IdeaWorkspace\\out\\artifacts\\SparkLocal_jar\\SparkLocal.jar"))
     //"D:\\IdeaWorkspace\\out\\artifacts\\SparkLocal_jar\\spark-assembly-1.4.1-hadoop2.6.0.jar"))
     //conf.set("spark.executor.memory", "1024m")
@@ -37,7 +38,7 @@ object main {
       new Ant(g_Pher, U, J_max, dsak_j_RDD, avs_RDD, sang_RDD)
     )
     //run
-    AntOneIteration(bestants, J_max, dsak_j_RDD, avs_RDD, sang_RDD, sc,"RDD")
+    AntOneIteration(bestants, J_max, dsak_j_RDD, avs_RDD, sang_RDD, sc, par,"RDD")
     val stoptime = new Date().getTime
     printf("the whole run time：%d ms",stoptime-starttime)
     val results = sc.parallelize(Output(bestants).sortWith(_.ant.Fobj>_.ant.Fobj), 1)
